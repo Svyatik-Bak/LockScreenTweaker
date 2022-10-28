@@ -1,0 +1,14 @@
+#include "resource.h"
+
+1 MANIFEST "1.manifest"
+IDI_MYAPP_ICON          ICON                    "icon.ico"
+IDB_PICTURE BITMAP DISCARDABLE "1.bmp"
+
+IDR_MYSTUPIDMENU MENU
+BEGIN
+    POPUP "Stuff"
+    BEGIN
+        MENUITEM "About", ID_STUFF_ABOUT
+        MENUITEM "Exit", ID_STUFF_EXIT
+    END
+END
