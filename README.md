@@ -13,5 +13,5 @@ Disable blur: ```reg add HKLM\SOFTWARE\Policies\Microsoft\Windows\System /v Disa
 Enable blur: ```reg add HKLM\SOFTWARE\Policies\Microsoft\Windows\System /v DisableAcrylicBackgroundOnLogon /t REG_DWORD /d 0 /f```
 
 # Compiling
-``gcc -o LockScreenTweaker.exe LockScreenTweaker.c res.o -lgdi32```
+```gcc -o LockScreenTweaker.exe LockScreenTweaker.c res.o -lgdi32```
 
