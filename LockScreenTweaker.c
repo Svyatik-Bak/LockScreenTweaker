@@ -1,47 +1,47 @@
 #include <windows.h>
 #include <stdbool.h>
-#include <SB_registry.h>
+#include <SB_registry.h> // My library https://github.com/Svyatik-Bak/SB_registry.h
 #include "resource.h"
-#define BUT1_ID 100
+#define BUT1_ID 100 
 #define BUT2_ID 200
 #define BUT3_ID 300
 #define BUT4_ID 400
 
-LRESULT CALLBACK WindowFunc(HWND hWnd, UINT Message,WPARAM wParam,LPARAM lParam){
-    HWND CLogo;
-    HBITMAP Picture;
-    char copyright[100];
-    HMENU hMenu, hSubMenu;
-    HICON hIcon, hIconSm;
+LRESULT CALLBACK WindowFunc(HWND window, UINT Message, WPARAM wParam, LPARAM lParam)
+{
+    HWND CPicture; HBITMAP Picture;
+    HMENU hMenu, hSubMenu; HICON hIcon, hIconSm;
     LPCREATESTRUCT pCreat = (LPCREATESTRUCT) lParam;
     switch(Message) 
     {
         case WM_CREATE:
+        //Hiding command prompt
         HWND hiding = GetConsoleWindow();
         ShowWindow(hiding, SW_HIDE);
-        hMenu = CreateMenu();
-        hSubMenu = CreatePopupMenu();
-        AppendMenu(hSubMenu, MF_STRING, ID_STUFF_ABOUT, "About");
-        AppendMenu(hSubMenu, MF_STRING, ID_STUFF_EXIT, "Exit");
-        AppendMenu(hMenu, MF_STRING | MF_POPUP, (UINT_PTR) hSubMenu, "Stuff");
-        SetMenu(hWnd, hMenu);
-        HWND butt1 = CreateWindow("button", "Disable Lock Screen", WS_VISIBLE | WS_CHILD, 170, 440, 150, 35, hWnd, (HMENU) BUT1_ID, NULL, NULL); 
-        HWND butt2 = CreateWindow("button", "Enable Lock Screen", WS_TABSTOP | WS_VISIBLE | WS_CHILD, 170, 490, 150, 35, hWnd, (HMENU) BUT2_ID, NULL, NULL);
-        HWND butt3 = CreateWindow("button", "Disable Blur", WS_TABSTOP | WS_VISIBLE | WS_CHILD, 400, 440, 150, 35, hWnd, (HMENU) BUT3_ID, NULL, NULL); 
-        HWND butt4 = CreateWindow("button", "Enable Blur", WS_TABSTOP | WS_VISIBLE | WS_CHILD, 400, 490, 150, 35, hWnd, (HMENU) BUT4_ID, NULL, NULL);
-        Picture = (HBITMAP)LoadImage(pCreat->hInstance, MAKEINTRESOURCE(IDB_PICTURE), IMAGE_BITMAP, 700, 400, 0);
-        CLogo = CreateWindow("Static", NULL, SS_BITMAP | WS_VISIBLE | WS_CHILD, 35, 20, 150, 30, hWnd, NULL, NULL, NULL);
-        SendMessage(CLogo, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)Picture);
+        // Creating menus
+        hMenu = CreateMenu(); hSubMenu = CreatePopupMenu();
+        AppendMenuW(hMenu, MF_STRING | MF_POPUP, (UINT_PTR) hSubMenu, L"Stuff");
+        AppendMenuW(hSubMenu, MF_STRING, ID_STUFF_GITHUB, L"My Github"); AppendMenuW(hSubMenu, MF_STRING, ID_STUFF_UTUB, L"My YouTube");
+        AppendMenuW(hSubMenu, MF_STRING, ID_STUFF_SITE, L"My Site"); AppendMenuW(hSubMenu, MF_STRING, ID_STUFF_ABOUT, L"About");
+        AppendMenuW(hSubMenu, MF_STRING, ID_STUFF_EXIT, L"Exit");
+        SetMenu(window, hMenu);
+        // Creating buttons
+        HWND butt1 = CreateWindowW(L"button", L"Disable Lock Screen", WS_VISIBLE | WS_CHILD, 170, 440, 150, 35, window, (HMENU) BUT1_ID, NULL, NULL); 
+        HWND butt2 = CreateWindowW(L"button", L"Enable Lock Screen", WS_VISIBLE | WS_CHILD, 170, 490, 150, 35, window, (HMENU) BUT2_ID, NULL, NULL);
+        HWND butt3 = CreateWindowW(L"button", L"Disable Blur", WS_VISIBLE | WS_CHILD, 400, 440, 150, 35, window, (HMENU) BUT3_ID, NULL, NULL); 
+        HWND butt4 = CreateWindowW(L"button", L"Enable Blur", WS_VISIBLE | WS_CHILD, 400, 490, 150, 35, window, (HMENU) BUT4_ID, NULL, NULL);
+        // Loading a picture
+        Picture = (HBITMAP)LoadImageW(pCreat->hInstance, MAKEINTRESOURCEW(IDB_PICTURE), IMAGE_BITMAP, 700, 400, 0);
+        CPicture = CreateWindowW(L"Static", NULL, SS_BITMAP | WS_VISIBLE | WS_CHILD, 35, 20, 150, 30, window, NULL, NULL, NULL);
+        SendMessageW(CPicture, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)Picture);
+        // Changing font on the buttons
         case WM_SETFONT:
-        NONCLIENTMETRICS metrics = {};
-        metrics.cbSize = sizeof(metrics);
-        SystemParametersInfo(SPI_GETNONCLIENTMETRICS, metrics.cbSize, &metrics, 0);
-        HFONT guiFont = CreateFontIndirect(&metrics.lfCaptionFont);
-        SendMessage(butt1, WM_SETFONT, (LPARAM)GetStockObject(DEFAULT_GUI_FONT), true);
-        SendMessage(butt2, WM_SETFONT, (LPARAM)GetStockObject(DEFAULT_GUI_FONT), true);
-        SendMessage(butt3, WM_SETFONT, (LPARAM)GetStockObject(DEFAULT_GUI_FONT), true);
-        SendMessage(butt4, WM_SETFONT, (LPARAM)GetStockObject(DEFAULT_GUI_FONT), true);
+        NONCLIENTMETRICS metrics = {}; metrics.cbSize = sizeof(metrics);
+        SystemParametersInfo(SPI_GETNONCLIENTMETRICS, metrics.cbSize, &metrics, 0); HFONT guiFont = CreateFontIndirect(&metrics.lfCaptionFont);
+        SendMessageW(butt1, WM_SETFONT, (LPARAM)GetStockObject(DEFAULT_GUI_FONT), true); SendMessageW(butt3, WM_SETFONT, (LPARAM)GetStockObject(DEFAULT_GUI_FONT), true); 
+        SendMessageW(butt2, WM_SETFONT, (LPARAM)GetStockObject(DEFAULT_GUI_FONT), true); SendMessageW(butt4, WM_SETFONT, (LPARAM)GetStockObject(DEFAULT_GUI_FONT), true);
         DeleteObject(guiFont);
+        //Events for buttons and menu
         case WM_COMMAND:
       if (LOWORD(wParam) == 100)
       {
@@ -69,42 +69,55 @@ LRESULT CALLBACK WindowFunc(HWND hWnd, UINT Message,WPARAM wParam,LPARAM lParam)
       {
          exit(0);
       }
+
       if (LOWORD(wParam) == 105)
       {
-         MessageBox(NULL, "(C) Svyatik Bak \nGUI: WindowsAPI\nhttps://svyatik-bak.github.io/index.en-us.html", "About", MB_ICONINFORMATION | MB_OK);
+         MessageBoxW(NULL, L"(C) Svyatik Bak \nGUI: Windows API\nhttps://svyatik-bak.github.io/index.en-us.html", L"About", MB_ICONINFORMATION | MB_OK);
+      } 
+      
+      if (LOWORD(wParam) == 107)
+      {
+         ShellExecuteW(NULL, L"open", L"https://github.com/Svyatik-Bak", NULL, NULL, SW_SHOW);
+      }
+      
+      if (LOWORD(wParam) == 108)
+      {
+         ShellExecuteW(NULL, L"open", L"https://www.youtube.com/SvyatikBak", NULL, NULL, SW_SHOW);
+      }
+      
+      if (LOWORD(wParam) == 109)
+      {
+         ShellExecuteW(NULL, L"open", L"https://svyatik-bak.github.io/index.en-us", NULL, NULL, SW_SHOW);
       } break;
         case WM_DESTROY: PostQuitMessage(0); break;
-        default: return DefWindowProc(hWnd, Message, wParam, lParam);
+        default: return DefWindowProc(window, Message, wParam, lParam);
     }
     return 0;
 }
 
 int WINAPI WinMain(HINSTANCE hThisInst, HINSTANCE hPrevInst, LPSTR Args, int WinMode)
 {
- WNDCLASSEX WinClass = { 0 };
- WinClass.cbSize        = sizeof(WNDCLASSEX);
- WinClass.hInstance     = hThisInst;
- WinClass.lpszClassName = "something";
- WinClass.lpfnWndProc   = WindowFunc;
- WinClass.style         = 0;
- WinClass.lpszMenuName  = MAKEINTRESOURCE(IDR_MYSTUPIDMENU);
- WinClass.hIcon         = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_MYAPP_ICON));
- WinClass.hIconSm       = (HICON)LoadImage(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_MYAPP_ICON), IMAGE_ICON, 16, 16, 0);
- WinClass.hCursor       = LoadCursor(NULL, IDC_ARROW);
- WinClass.lpszMenuName  = NULL;
- WinClass.cbClsExtra    = 0;
- WinClass.cbWndExtra    = 0;
+// Some classes
+ WNDCLASSEX wc = { 0 }; wc.cbSize = sizeof(WNDCLASSEX);
+ wc.hInstance = hThisInst; wc.lpszClassName = "something";
+ wc.lpfnWndProc = WindowFunc; wc.style = 0;
+ wc.lpszMenuName = MAKEINTRESOURCE(IDR_MYSTUPIDMENU); wc.hIcon = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_MYAPP_ICON));
+ wc.hIconSm = (HICON)LoadImage(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_MYAPP_ICON), IMAGE_ICON, 16, 16, 0); wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+ wc.lpszMenuName = NULL; wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
+ wc.cbClsExtra = 0; wc.cbWndExtra = 0;
 
- if (!RegisterClassEx(&WinClass)) 
+// Classes registration error
+ if (!RegisterClassEx(&wc)) 
  {
-    MessageBox(NULL, "Something ununexpected happened", "Oops", MB_ICONERROR | MB_OK);
+    MessageBoxW(NULL, L"Something ununexpected happened", L"Oops", MB_ICONERROR | MB_OK);
     return 1;
  }
 
- HWND hWnd = CreateWindow("something", "Lock Screen Tweaker", WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX, CW_USEDEFAULT, CW_USEDEFAULT, 800, 600, NULL, NULL, hThisInst, NULL);
+ // Main window
+ HWND window = CreateWindowW(L"something", L"Lock Screen Tweaker", WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX, 540, 200, 800, 600, NULL, NULL, hThisInst, NULL);
 
- ShowWindow(hWnd, WinMode);
- UpdateWindow(hWnd);
+ ShowWindow(window, WinMode);
+ UpdateWindow(window);
  MSG Message;
 
  while (GetMessage(&Message, NULL, 0, 0) > 0)

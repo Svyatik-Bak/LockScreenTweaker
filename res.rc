@@ -2,7 +2,7 @@
 
 1 MANIFEST "1.manifest"
 IDI_MYAPP_ICON          ICON                    "icon.ico"
-IDB_PICTURE BITMAP DISCARDABLE "1.bmp"
+IDB_PICTURE BITMAP DISCARDABLE "11.bmp"
 
 IDR_MYSTUPIDMENU MENU
 BEGIN
@@ -10,5 +10,8 @@ BEGIN
     BEGIN
         MENUITEM "About", ID_STUFF_ABOUT
         MENUITEM "Exit", ID_STUFF_EXIT
+        MENUITEM "My Github", ID_STUFF_GITHUB
+        MENUITEM "My YouTube", ID_STUFF_UTUB
+        MENUITEM "My Site", ID_STUFF_SITE
     END
 END
